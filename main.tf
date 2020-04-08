@@ -209,3 +209,11 @@ resource "aws_nat_gateway" "nat_gateway_1" {
   subnet_id     = aws_subnet.public_1.id
   depends_on    = [aws_internet_gateway.example]
 }
+
+module "example_sg" {
+  source      = "./security_group"
+  name        = "module-sg"
+  vpc_id      = aws_vpc.example.id
+  port        = 80
+  cidr_blocks = ["0.0.0.0/0"]
+}
