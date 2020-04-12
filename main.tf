@@ -657,7 +657,7 @@ resource "aws_elasticache_subnet_group" "example" {
 }
 
 resource "aws_elasticache_replication_group" "example" {
-  replacation_group_id          = "example"
+  replication_group_id          = "example"
   replication_group_description = "Cluster Disabled"
   engine                        = "redis"
   engine_version                = "5.0.4"
@@ -680,4 +680,34 @@ module "redis_sg" {
   vpc_id      = aws_vpc.example.id
   port        = 6379
   cidr_blocks = [aws_vpc.example.cidr_block]
+}
+
+# chapter 14
+
+resource "aws_ecr_repository" "example" {
+  name = "example"
+}
+
+resource "aws_ecr_lifecycle_policy" "example" {
+  repository = aws_ecr_repository.example.name
+
+  policy = <<EOF
+  {
+    "rules": [
+      {
+        "rulePriority": 1,
+        "description": "Keep last 30 relaease tagged images",
+        "selection": {
+          "tagStatus": "tagged",
+          "tagPrefixList": ["release"],
+          "countType": "imageCountMoreThan",
+          "countNumber": 30
+        },
+        "action": {
+          "type": "expire"
+        }
+      }
+    ]
+  }
+EOF
 }
