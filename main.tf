@@ -23,6 +23,7 @@ module "describe_regions_for_ec2" {
 }
 
 resource "aws_s3_bucket" "private" {
+  # FIXME 
   bucket = "private-pragmatic-terraform-study"
 
   versioning {
@@ -49,6 +50,7 @@ resource "aws_s3_bucket_public_access_block" "private" {
 }
 
 resource "aws_s3_bucket" "public" {
+  # FIXME 
   bucket = "public-pragmatic-terraform-study"
   acl    = "public-read"
 
@@ -61,6 +63,7 @@ resource "aws_s3_bucket" "public" {
 }
 
 resource "aws_s3_bucket" "alb_log" {
+  # FIXME 
   bucket = "alb-log-progmatic-terraform-public"
 
   lifecycle_rule {
@@ -73,6 +76,7 @@ resource "aws_s3_bucket" "alb_log" {
 }
 
 resource "aws_s3_bucket_policy" "alb_log" {
+  # FIXME 
   bucket = aws_s3_bucket.alb_log.id
   policy = data.aws_iam_policy_document.alb_log.json
 }
@@ -289,6 +293,7 @@ resource "aws_lb_listener" "http" {
 }
 
 data "aws_route53_zone" "example" {
+  # FIXME 
   name = "example.com"
 }
 
@@ -779,6 +784,7 @@ module "codepipeline_role" {
 }
 
 resource "aws_s3_bucket" "artifact" {
+  # FIXME 
   bucket = "artifact-pragmatic-terraform-study"
 
   lifecycle_rule {
@@ -806,6 +812,7 @@ resource "aws_codepipeline" "example" {
       output_artifacts = ["Source"]
 
       configuration = {
+        # FIXME 
         Owner                = "yysaki"
         Repo                 = "pragmatic-terraform-study"
         Branch               = "master"
@@ -854,5 +861,21 @@ resource "aws_codepipeline" "example" {
   artifact_store {
     location = aws_s3_bucket.artifact.id
     type     = "S3"
+  }
+}
+
+resource "aws_codepipeline_webhook" "example" {
+  name            = "example"
+  target_pipeline = aws_codepipeline.example.name
+  target_action   = "Source"
+  authentication  = "GITHUB_HMAC"
+
+  authentication_configuration {
+    secret_token = "VeryRandomStringMoreThan20Byte!"
+  }
+
+  filter {
+    json_path    = "$.ref"
+    match_equals = "refs/heads/{Branch}"
   }
 }
