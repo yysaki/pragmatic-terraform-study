@@ -26,6 +26,9 @@ resource "aws_s3_bucket" "private" {
   # FIXME 
   bucket = "private-pragmatic-terraform-study"
 
+  # force destroy
+  force_destroy = true
+
   versioning {
     enabled = true
   }
@@ -54,6 +57,9 @@ resource "aws_s3_bucket" "public" {
   bucket = "public-pragmatic-terraform-study"
   acl    = "public-read"
 
+  # force destroy
+  force_destroy = true
+
   cors_rule {
     allowed_origins = ["https://example.com"]
     allowed_methods = ["GET"]
@@ -65,6 +71,9 @@ resource "aws_s3_bucket" "public" {
 resource "aws_s3_bucket" "alb_log" {
   # FIXME 
   bucket = "alb-log-progmatic-terraform-public"
+
+  # force destroy
+  force_destroy = true
 
   lifecycle_rule {
     enabled = true
@@ -225,11 +234,12 @@ module "example_sg" {
 # chapter 8
 
 resource "aws_lb" "example" {
-  name                       = "example"
-  load_balancer_type         = "application"
-  internal                   = false
-  idle_timeout               = 60
-  enable_deletion_protection = true
+  name               = "example"
+  load_balancer_type = "application"
+  internal           = false
+  idle_timeout       = 60
+  # force_destroy
+  # enable_deletion_protection = true
 
   subnets = [
     aws_subnet.public_0.id,
@@ -624,17 +634,16 @@ resource "aws_db_instance" "example" {
   backup_retention_period    = 30
   maintenance_window         = "mon:10:10-mon:10:40"
   auto_minor_version_upgrade = false
-  deletion_protection        = true
-  skip_final_snapshot        = false
-  # 検証用途で削除する場合:
-  # deletion_protection      = false
-  # skip_final_snapshot      = true
-  port                   = 3306
-  apply_immediately      = false
-  vpc_security_group_ids = [module.mysql_sg.security_group_id]
-  parameter_group_name   = aws_db_parameter_group.example.name
-  option_group_name      = aws_db_option_group.example.name
-  db_subnet_group_name   = aws_db_subnet_group.example.name
+  port                       = 3306
+  apply_immediately          = false
+  vpc_security_group_ids     = [module.mysql_sg.security_group_id]
+  parameter_group_name       = aws_db_parameter_group.example.name
+  option_group_name          = aws_db_option_group.example.name
+  db_subnet_group_name       = aws_db_subnet_group.example.name
+
+  # force destroy
+  deletion_protection = false
+  skip_final_snapshot = true
 
   lifecycle {
     ignore_changes = [password]
@@ -789,6 +798,9 @@ module "codepipeline_role" {
 resource "aws_s3_bucket" "artifact" {
   # FIXME 
   bucket = "artifact-pragmatic-terraform-study"
+
+  # force destroy
+  force_destroy = true
 
   lifecycle_rule {
     enabled = true
@@ -966,6 +978,9 @@ resource "aws_s3_bucket" "operation" {
   # FIXME
   bucket = "operation-pragmatic-terraform-study"
 
+  # force destroy
+  force_destroy = true
+
   lifecycle_rule {
     enabled = true
 
@@ -990,6 +1005,9 @@ resource "aws_ssm_document" "session_manager_run_shell" {
 
 resource "aws_s3_bucket" "cloudwatch_logs" {
   bucket = "cloudwatch-logs-pragmatic-terraform-study"
+
+  # force destroy
+  force_destroy = true
 
   lifecycle_rule {
     enabled = true
