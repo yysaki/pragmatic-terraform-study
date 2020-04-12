@@ -879,3 +879,27 @@ resource "aws_codepipeline_webhook" "example" {
     match_equals = "refs/heads/{Branch}"
   }
 }
+
+output "codepipeline_webhook_url" {
+  value = aws_codepipeline_webhook.example.url
+}
+
+# 個人アカウントのリポジトリには対応していない: https://www.terraform.io/docs/providers/github/r/repository_webhook.html
+# provider "github" {
+#   # FIXME
+#   organization = "yysaki"
+# }
+
+# resource "github_repository_webhook" "example" {
+#   # FIXME
+#   repository = "pragmatic-terraform-study"
+
+#   configuration {
+#     url          = aws_codepipeline_webhook.example.url
+#     secret       = "VeryRandomStringMoreThan20Byte!"
+#     content_type = "json"
+#     insecure_ssl = false
+#   }
+
+#   events = ["push"]
+# }
