@@ -104,7 +104,8 @@ data "aws_iam_policy_document" "alb_log" {
 }
 
 provider "aws" {
-  region = "ap-northeast-1"
+  region  = "ap-northeast-1"
+  version = "2.55.0"
 }
 
 # chapter 7
@@ -1083,4 +1084,10 @@ resource "aws_cloudwatch_log_subscription_filter" "example" {
   destination_arn = aws_kinesis_firehose_delivery_stream.example.arn
   filter_pattern  = "[]"
   role_arn        = module.cloudwatch_logs_role.iam_role_arn
+}
+
+# chapter 17
+
+terraform {
+  required_version = "0.12.5"
 }
