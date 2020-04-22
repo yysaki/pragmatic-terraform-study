@@ -259,10 +259,6 @@ resource "aws_lb" "example" {
   ]
 }
 
-output "alb_dns_name" {
-  value = aws_lb.example.dns_name
-}
-
 module "http_sg" {
   source      = "./security_group"
   name        = "http-sg"
@@ -318,10 +314,6 @@ resource "aws_route53_record" "example" {
     zone_id                = aws_lb.example.zone_id
     evaluate_target_health = true
   }
-}
-
-output "domain_name" {
-  value = aws_route53_record.example.name
 }
 
 resource "aws_acm_certificate" "example" {
@@ -896,10 +888,6 @@ resource "aws_codepipeline_webhook" "example" {
   }
 }
 
-output "codepipeline_webhook_url" {
-  value = aws_codepipeline_webhook.example.url
-}
-
 # 個人アカウントのリポジトリには対応していない: https://www.terraform.io/docs/providers/github/r/repository_webhook.html
 # provider "github" {
 #   # FIXME
@@ -967,10 +955,6 @@ resource "aws_instance" "example_for_operation" {
   iam_instance_profile = aws_iam_instance_profile.ec2_for_ssm.name
   subnet_id            = aws_subnet.private_0.id
   user_data            = file("./user_data.sh")
-}
-
-output "operation_instance_id" {
-  value = aws_instance.example_for_operation.id
 }
 
 # chapter 16
