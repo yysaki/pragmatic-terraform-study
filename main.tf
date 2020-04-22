@@ -103,11 +103,6 @@ data "aws_iam_policy_document" "alb_log" {
   }
 }
 
-provider "aws" {
-  region  = "ap-northeast-1"
-  version = "2.55.0"
-}
-
 # chapter 7
 
 resource "aws_vpc" "example" {
