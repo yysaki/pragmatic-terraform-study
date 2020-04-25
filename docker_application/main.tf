@@ -1,19 +1,4 @@
-# chapter 5
-
-data "aws_iam_policy_document" "allow_describe_regions" {
-  statement {
-    effect    = "Allow"
-    actions   = ["ec2:DescribeRegions"]
-    resources = ["*"]
-  }
-}
-
-module "describe_regions_for_ec2" {
-  source     = "./iam_role"
-  name       = "describe-regions-for-ec2"
-  identifier = "ec2.amazonaws.com"
-  policy     = data.aws_iam_policy_document.allow_describe_regions.json
-}
+# chapter 6
 
 resource "aws_s3_bucket" "private" {
   # FIXME 
@@ -34,8 +19,6 @@ resource "aws_s3_bucket" "private" {
     }
   }
 }
-
-# chapter 6
 
 resource "aws_s3_bucket_public_access_block" "private" {
   bucket                  = aws_s3_bucket.private.id
@@ -78,7 +61,6 @@ resource "aws_s3_bucket" "alb_log" {
 }
 
 resource "aws_s3_bucket_policy" "alb_log" {
-  # FIXME 
   bucket = aws_s3_bucket.alb_log.id
   policy = data.aws_iam_policy_document.alb_log.json
 }
@@ -210,14 +192,6 @@ resource "aws_nat_gateway" "nat_gateway_1" {
   allocation_id = aws_eip.nat_gateway_1.id
   subnet_id     = aws_subnet.public_1.id
   depends_on    = [aws_internet_gateway.example]
-}
-
-module "example_sg" {
-  source      = "./security_group"
-  name        = "module-sg"
-  vpc_id      = aws_vpc.example.id
-  port        = 80
-  cidr_blocks = ["0.0.0.0/0"]
 }
 
 # chapter 8
