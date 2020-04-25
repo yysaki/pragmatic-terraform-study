@@ -1,10 +1,3 @@
-# chapter 3
-
-module "web_server" {
-  source        = "./http_server"
-  instance_type = "t3.micro"
-}
-
 # chapter 5
 
 data "aws_iam_policy_document" "allow_describe_regions" {
